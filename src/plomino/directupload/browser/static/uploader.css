@@ -1,0 +1,102 @@
+/* UPLOAD NUOVI */
+
+.iol-wait-doc {
+  height:100px;
+  width:100px;
+  background: url('loading-2.gif') no-repeat center;
+  background-color: #FFF;
+  float:left;
+}
+.iol-download-doc {
+  height:70px;
+  width:70px;
+  background: url('doc-download-red-small.png') no-repeat center;
+  background-color: #FFF;
+  cursor: pointer;
+  float:left;
+}
+
+.iol-create-doc {
+  height:100px;
+  width:100px;
+  background: url('doc-download-red.png') no-repeat center;
+  background-color: #FFF;
+  cursor: pointer;
+}
+
+.iol-upload-doc {
+  height:36px;
+  width:100%;
+  background: url('++resource++iol.document/images/upload.png') no-repeat left;
+  background-color: #FFF;
+  float:left;
+}
+
+.multi-upload {
+  background: url('++resource++iol.document/images/multi-upload.png') no-repeat left;
+}
+
+input[type='file'].document-upload {
+  display: none;
+
+}
+label.document-upload{
+  margin-left:35px;
+  height: 100%;
+  text-decoration:none;
+}
+
+label.document-upload.required:first-child:after {
+    color: Red;
+    content: "■";
+    padding-left: 0.2em;
+}
+
+
+ul.document-upload{
+  float:left;
+  width:100px;
+}
+
+a.directupload{
+  color:#333333 !important;
+}
+
+
+div.no-attachments{
+  width: 100%;
+  font-weight: bold;
+  color: #FF0000;
+  text-align: center;
+}
+
+ul.file-attachments{
+  border:1px solid grey;
+  border-radius: 5px;
+  overflow:hidden;
+  width:100%;
+  margin-left:0px !important;
+  padding:5px;
+}
+
+ul.file-attachments a{
+  color:#333333 !important;
+}
+
+.template-upload td{
+
+  color:blue;
+  width:80px;
+  text-align: center;
+
+}
+
+.template-upload .btn {
+  width:100px;
+  margin-left: 5px;
+}
+.template-upload textarea{
+
+  display: none;
+
+}

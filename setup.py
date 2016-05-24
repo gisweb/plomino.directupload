@@ -46,6 +46,7 @@ setup(
         'plone.api',
         'setuptools',
         'z3c.jbot',
+        'collective.upload'
     ],
     extras_require={
         'test': [

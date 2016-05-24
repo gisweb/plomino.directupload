@@ -2,5 +2,7 @@
 <metadata>
   <version>1000</version>
   <dependencies>
+    <dependency>profile-Products.CMFPlomino:default</dependency>
+    <dependency>profile-collective.upload:default</dependency>
   </dependencies>
 </metadata>

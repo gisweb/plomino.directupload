@@ -11,6 +11,13 @@
 
   <include package=".browser" />
 
+  <include package="Products.CMFPlomino.fields"/>
+  
+  <adapter
+      for="Products.CMFPlomino.interfaces.IPlominoField"
+      provides=".uploadfield.IUploadField"
+      factory=".uploadfield.UploadField"
+    />
 
   <genericsetup:registerProfile
       name="default"

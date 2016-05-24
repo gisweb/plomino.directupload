@@ -1,0 +1,50 @@
+<tal:block tal:define="
+    widget python:options['field'].getSettings('widget');
+    maxsize python:options['field'].getSettings('maxsize') and options['field'].getSettings('maxsize');
+    extensions python:options['field'].getSettings('filetype') and options['field'].getSettings('filetype').replace(' ', '').replace(',', '|');
+    printservice python:options['field'].getSettings('printservice');
+    fieldName options/fieldname;
+    fieldTitle python:options['field'].title;
+    attachments options/fieldvalue;
+    filenames attachments/keys|nothing;
+    labelClass python:'document-upload required' if options['field'].getMandatory() else 'document-upload';
+    imageClass python:'iol-upload-doc multi-upload' if widget=='MULTI' else 'iol-upload-doc';
+    ">
+
+<!--
+<div tal:content="widget"></div>
+<div tal:content="maxsize"></div>
+<div tal:content="extensions"></div>
+<div tal:content="python: options['field'].getSettings().getIcon('image/png','small')"></div>
+
+-->
+<!--VEDERE SE FAR SPARIRE TUTTO O FAR COMPARIRE IL MESSAGGIO DI AVVISO-->
+<span class="plominoFieldGroup" tal:condition="python: not options['doc'].isDocument()">
+    <label tal:attributes="class labelClass" tal:content="fieldTitle" ></label>
+    <div class="no-attachments">E' possibile caricare gli allegati solo dopo aver salvato il documento</div>
+</span>
+
+<!--TEMPLATE COMPARE SOLO SE SONO SU UN DOCUMENTO SALVATO-->
+<span class="plominoFieldGroup" tal:condition="python:options['doc'].isDocument()">
+
+    <a class="directupload" title="Carica documenti da allegare." tal:attributes="href string:@@directupload/$fieldName;data-extensions extensions;data-maxsize maxsize" style="cursor: pointer;">
+        <div tal:attributes="class imageClass"><label tal:attributes="class labelClass" tal:content="fieldTitle" ></label></div>
+    </a>
+
+    <ul tal:condition="printservice" class="file-attachments">
+        <li>Documento da scaricare e ricaricare firmato:</li>
+        <li><a tal:attributes="href string:@@${printservice}" target="new">                <img src="pdf.png"> <span> SCARICA IL MODULO </span><img src="download_icon.png"></a></li>
+        <li>Documento da scaricare e ricaricare firmato:</li>
+        <li><a class="directupload" title="Carica documenti da allegare." tal:attributes="href string:@@directupload/$fieldName;data-extensions extensions;data-maxsize maxsize" style="cursor: pointer;"><div tal:attributes="class imageClass">twretertwre</div></a></li>
+    </ul>
+
+    <ul tal:attributes="id string:${options/fieldname}-list;name options/fieldname" class="file-attachments">
+    <li tal:repeat="attachment options/fieldvalue">
+        <a href="#" tal:attributes="href string:${options/fieldname}/removeattachment?filename=$attachment"><img alt="Elimina allegato" src="++resource++iol.document/images/trash.png" /></a>
+        <a href="#" target="new" tal:attributes="href python:'getfile?filename='+attachment"> <img tal:attributes="src python:options['field'].getSettings().getIcon(attachments[attachment],'small')"/><span tal:content="attachment"></span></a><img src="confirm_icon.png">
+     </li>
+    </ul>
+</span>
+<input type="hidden" tal:attributes="name options/fieldname;" value="pass"/>
+
+</tal:block>

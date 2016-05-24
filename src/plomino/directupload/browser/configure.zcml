@@ -16,5 +16,48 @@
       name="plomino.directupload"
       directory="static"
       />
+      
+  <browser:page
+      name="uploadsettings"
+      for="Products.CMFPlomino.interfaces.IPlominoField"
+      class=".uploadfield.SettingForm"
+      permission="plomino.DESIGN_PERMISSION"
+      /> 
+
+  <browser:page
+      for="Products.CMFPlomino.interfaces.IPlominoDocument"
+      name="directupload"
+      permission="zope2.View"
+      class=".uploader.Attachments"
+      template="templates/upload_dialog.pt"
+      layer="iol.document.interfaces.IIolDocumentLayer"
+    />
+
+  <browser:page
+      for="Products.CMFPlomino.interfaces.IPlominoDocument"
+      name="getattachment"
+      permission="zope2.View"
+      class=".uploader.Attachments"
+      attribute="getAttachmentUrl"
+      layer="iol.document.interfaces.IIolDocumentLayer"
+      />
+
+  <browser:page
+      for="Products.CMFPlomino.interfaces.IPlominoDocument"
+      name="removeattachment"
+      permission="zope2.View"
+      class=".uploader.Attachments"
+      attribute="removeAttachment"
+      layer="iol.document.interfaces.IIolDocumentLayer"
+      />
+
+  <browser:page
+      for="Products.CMFPlomino.interfaces.IPlominoDocument"
+      name="getattachmentFiles"
+      permission="zope2.View"
+      class=".uploader.Attachments"
+      attribute="getAttachmentFiles"
+      layer="iol.document.interfaces.IIolDocumentLayer"
+      />
 
 </configure>
