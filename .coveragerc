@@ -1,0 +1,6 @@
+[report]
+include =
+    src/plomino/*
+omit =
+    */test*
+    */upgrades/*
