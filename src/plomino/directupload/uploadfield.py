@@ -26,7 +26,7 @@ from Products.CMFPlomino.fields.base import IBaseField, BaseField, BaseForm
 from Products.CMFPlomino.interfaces import IPlominoField
 from Products.CMFPlomino.fields.dictionaryproperty import DictionaryProperty
 from ZPublisher.HTTPRequest import FileUpload
-from iol.document.config import ICONxCONTENT, SMALLICONxCONTENT
+from .config import ICONxCONTENT, SMALLICONxCONTENT
 
 
 class IUploadField(IBaseField):
@@ -87,10 +87,11 @@ class UploadField(BaseField):
         errors=[]
         fieldname = self.context.id
         doc = self.getDocument()
-        v = doc.getItem(fieldname)
-        if self.context.getMandatory() and not v:
-            field = doc.getForm().getFormField(fieldname)
-            errors = ["Manca il valore del campo %s" %field.title]
+        if doc:
+            v = doc.getItem(fieldname)
+            if self.context.getMandatory() and not v:
+                field = doc.getForm().getFormField(fieldname)
+                errors = ["Manca il valore del campo %s" %field.title]
 
         return errors
 
@@ -109,9 +110,10 @@ class UploadField(BaseField):
         """
         if submittedValue == 'pass':
             doc = self.getDocument()
-            fieldname = self.context.id
-            v = doc.getItem(fieldname,None)
-            return v
+            if doc:
+                fieldname = self.context.id
+                v = doc.getItem(fieldname,None)
+                return v
 
 
 

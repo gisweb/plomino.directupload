@@ -40,7 +40,7 @@
 
     <ul tal:attributes="id string:${options/fieldname}-list;name options/fieldname" class="file-attachments">
     <li tal:repeat="attachment options/fieldvalue">
-        <a href="#" tal:attributes="href string:${options/fieldname}/removeattachment?filename=$attachment"><img alt="Elimina allegato" src="++resource++iol.document/images/trash.png" /></a>
+        <a href="#" tal:attributes="href string:${options/fieldname}/removeattachment?filename=$attachment"><img alt="Elimina allegato" src="++resource++plomino.directupload/images/trash.png" /></a>
         <a href="#" target="new" tal:attributes="href python:'getfile?filename='+attachment"> <img tal:attributes="src python:options['field'].getSettings().getIcon(attachments[attachment],'small')"/><span tal:content="attachment"></span></a><img src="confirm_icon.png">
      </li>
     </ul>

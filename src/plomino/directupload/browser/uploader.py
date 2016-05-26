@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import queryMultiAdapter
@@ -19,7 +21,7 @@ import base64
 from Products.CMFPlone.utils import normalizeString
 from ZPublisher.HTTPRequest import FileUpload
 from plone.memoize.view import memoize
-
+from ..uploadfield import IUploadField
 
 try:
     from plone.app.blob.field import BlobWrapper
@@ -31,14 +33,18 @@ except ImportError, e:
 
 
 class Attachments(BrowserView):
+    field = None
+    ErrorMessage = None
 
     def publishTraverse(self, request, fieldName):
         if fieldName:
             self.fieldName = fieldName
             form = self.doc.getForm()
             field = form.getFormField(self.fieldName)
-            self.settings = field.getSettings()
-            self.fieldTitle = field.title
+            if field:
+                self.field = field
+                self.settings = field.getSettings()
+                self.fieldTitle = field.title
 
         return self
 
@@ -96,6 +102,16 @@ class Attachments(BrowserView):
                     if uploaded:
                         return json.dumps({'files': uploaded})
                 return ""
+
+        if not self.field:
+            self.ErrorMessage =  "Manca il campo %s" %self.fieldName
+        elif not IUploadField.providedBy(self.settings):
+            self.ErrorMessage =  "Il campo %s non è di tipo Direct Upload" %self.fieldName
+
+        if self.ErrorMessage:
+            errorDialog = ViewPageTemplateFile("templates/error_dialog.pt")
+            return errorDialog(self)
+
         return self.index()
 
     def upload(self, files, title='', description=''):
@@ -109,6 +125,8 @@ class Attachments(BrowserView):
         overwrite = True
 
         current_files = self.doc.getItem(self.fieldName,{})
+        if not current_files:
+            current_files = dict()
 
 
         #Utile ma pericoloso: se cambio da multi a single elimino tutti i file.. da vedere 
@@ -139,7 +157,6 @@ class Attachments(BrowserView):
     #            if overwrite and filename in self.objectIds():
     #                self.doc.deletefile(filename)
 
-                #import pdb;pdb.set_trace()
                 contenttype = item.headers.get('Content-Type')
                 filename = safe_unicode(item.filename)
                 data = item.read()

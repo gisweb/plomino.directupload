@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    lang="en"
+    i18n:domain="collective.upload"
+    metal:use-macro="context/main_template/macros/master"
+    tal:define="portal_state context/@@plone_portal_state;
+                portal_url portal_state/portal_url;">
+    <head>
+        <meta content="text/html; charset=utf-8" />
+        <title>jQuery File Upload Example</title>
+    </head>
+    <body tal:define="errors options/state/getErrors">
+        <metal:main fill-slot="main">
+        <tal:protect
+            tal:condition="python: not checkPermission('List folder contents', here)"
+            tal:replace="here/raiseUnauthorized" />
+            <metal:main_macro define-macro="main">
+            <metal:uploader define-macro="file_uploader">
+            <tal:protect
+                tal:condition="python: checkPermission('List folder contents', here)">
+            <div class="alert alert-error" tal:content="view/ErrorMessage">
+
+
+                Error Message
+
+            </div>
+            </tal:protect>
+            </metal:uploader>
+            </metal:main_macro>
+        </metal:main>
+    </body>
+</html>

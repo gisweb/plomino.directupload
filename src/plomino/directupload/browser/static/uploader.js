@@ -4,11 +4,11 @@
 
     $(function () {
 
-        var my_config_upload_form  = function (options) {
+        var my_config_upload_form  = function (options, overlay) {
 
             //we have to check if the fileupload element existing
 
-            console.log(options)
+            console.log(overlay)
 
             if ($('#fileupload')[0] !== undefined) {
                 console.log(jupload.config['extensions'])
@@ -113,6 +113,8 @@
                   .bind('fileuploaddone', function (e, data) {
                     console.log(data.context.first(".preview"))
                     console.log(data.files)
+                    console.log("FATTO")
+                    //$(".overlay div.close").click()
                     if(data.files.length){
                       var ftype = data.files[0].type
                       if (ftype=="application/pdf"){
@@ -130,7 +132,7 @@
                     console.log($el)
 
                     $el.append('<li><a href="deleteAttachmentIol?field=' + info["field_name"] + '&amp;filename=' + info["name"] + '">\
-                        <img src="++resource++iol.document/images/trash.png" alt="Elimina allegato"></a>\
+                        <img src="++resource++plomino.directupload/images/trash.png" alt="Elimina allegato"></a>\
                         <a target="new" href="getfile?filename=' + info["name"] + '">\
                         <img src="topic_icon.png"><span>' + info["name"] + '</span></a></li>')
                     
@@ -182,7 +184,7 @@
 
         //overlay collective.upload
 
-    $('.iol-upload-doc, .iol-multi-upload-doc').bind("click",function(e){
+    $('.directupload, .iol-multi-upload-doc').bind("click",function(e){
 
         e.preventDefault();
 
@@ -199,13 +201,19 @@
 
         }
 
-        $(this).parent().prepOverlay(
+        console.log($(this))
+
+        $(this).prepOverlay(
                     {
                         subtype: 'ajax',
+                        closeselector: 'pippo',
                         filter: common_content_filter,
-                        config: {
+                        config: {                        
+                            closeselector: 'pippo',
+
                             onLoad: function(arg){
-                                my_config_upload_form(options);
+                                console.log(this.getOverlay())
+                                my_config_upload_form(options,this.getOverlay());
                             }
                         }
                     }

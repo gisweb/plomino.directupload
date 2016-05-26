@@ -20,7 +20,7 @@
   <browser:page
       name="uploadsettings"
       for="Products.CMFPlomino.interfaces.IPlominoField"
-      class=".uploadfield.SettingForm"
+      class="..uploadfield.SettingForm"
       permission="plomino.DESIGN_PERMISSION"
       /> 
 
@@ -30,7 +30,7 @@
       permission="zope2.View"
       class=".uploader.Attachments"
       template="templates/upload_dialog.pt"
-      layer="iol.document.interfaces.IIolDocumentLayer"
+      layer="plomino.directupload.interfaces.IPlominoDirectuploadLayer"
     />
 
   <browser:page
@@ -39,7 +39,7 @@
       permission="zope2.View"
       class=".uploader.Attachments"
       attribute="getAttachmentUrl"
-      layer="iol.document.interfaces.IIolDocumentLayer"
+      layer="plomino.directupload.interfaces.IPlominoDirectuploadLayer"
       />
 
   <browser:page
@@ -48,7 +48,7 @@
       permission="zope2.View"
       class=".uploader.Attachments"
       attribute="removeAttachment"
-      layer="iol.document.interfaces.IIolDocumentLayer"
+      layer="plomino.directupload.interfaces.IPlominoDirectuploadLayer"
       />
 
   <browser:page
@@ -57,7 +57,7 @@
       permission="zope2.View"
       class=".uploader.Attachments"
       attribute="getAttachmentFiles"
-      layer="iol.document.interfaces.IIolDocumentLayer"
+      layer="plomino.directupload.interfaces.IPlominoDirectuploadLayer"
       />
 
 </configure>

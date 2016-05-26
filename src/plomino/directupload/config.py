@@ -3,12 +3,12 @@ ATTACHMENT_FOLDER = 'documenti_allegati'
 
 
 ICONxCONTENT = {
-'image/jpeg':'++resource++iol.document/images/jpg.png',
-'image/gif':'++resource++iol.document/images/gif.png',
-'image/png':'++resource++iol.document/images/png.png',
-'application/pdf':'++resource++iol.document/images/pdf.png',
-'application/x-dike':'++resource++iol.document/images/firmadigitale.png',
-'default':'++resource++iol.document/images/attachment.png',
+'image/jpeg':'++resource++plomino.directupload/images/jpg.png',
+'image/gif':'++resource++plomino.directupload/images/gif.png',
+'image/png':'++resource++plomino.directupload/images/png.png',
+'application/pdf':'++resource++plomino.directupload/images/pdf.png',
+'application/x-dike':'++resource++plomino.directupload/images/firmadigitale.png',
+'default':'++resource++plomino.directupload/images/attachment.png',
 }
 
 SMALLICONxCONTENT = {
