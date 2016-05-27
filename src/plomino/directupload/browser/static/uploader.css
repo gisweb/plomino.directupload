@@ -71,7 +71,7 @@ div.no-attachments{
 }
 
 ul.file-attachments{
-  border:1px solid grey;
+  border:1px solid #ACACAC;
   border-radius: 5px;
   overflow:hidden;
   width:100%;
@@ -91,6 +91,11 @@ ul.file-attachments a{
 
 }
 
+td.delete{
+
+  display:none;
+
+}
 .template-upload .btn {
   width:100px;
   margin-left: 5px;

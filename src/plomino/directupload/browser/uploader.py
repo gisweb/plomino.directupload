@@ -15,7 +15,7 @@ from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
 
 from collective.upload.config import IMAGE_MIMETYPES
-from ..config import ATTACHMENT_FOLDER, ICONxCONTENT
+from ..config import ATTACHMENT_FOLDER, ICONxCONTENT, SMALLICONxCONTENT
 import json
 import base64
 from Products.CMFPlone.utils import normalizeString
@@ -39,6 +39,12 @@ class Attachments(BrowserView):
     def publishTraverse(self, request, fieldName):
         if fieldName:
             self.fieldName = fieldName
+            """
+            if request.get("openwithform"):
+                db = self.doc.getParentDatabase()
+                form = db.getForm(request.get("openwithform"))
+            else:
+            """
             form = self.doc.getForm()
             field = form.getFormField(self.fieldName)
             if field:
@@ -54,6 +60,8 @@ class Attachments(BrowserView):
         self.doc = context
         #multi = self.multi# =  "multi" in request.keys()
 
+
+
     @property
     @memoize
     def multi(self):
@@ -62,14 +70,16 @@ class Attachments(BrowserView):
     def removeAttachment(self):
         """
         """
+
+        fieldname = self.request.get("fieldname")
         filename = self.request.get("filename")
-        current_files = self.doc.getItem(self.fieldName)
+        current_files = self.doc.getItem(fieldname)
         if current_files.has_key(filename):
             del current_files[filename]
-            self.setItem(fieldname, current_files)
-            self.deletefile(filename)
+            self.doc.setItem(fieldname, current_files)
+            self.doc.deletefile(filename)
         self.request.RESPONSE.setHeader('content-type', 'application/json; charset=utf-8')
-        return json.dump(current_files)
+        return json.dumps({"fieldname":fieldname,"files":current_files,"icons":SMALLICONxCONTENT})
 
 
     #usata per le prove

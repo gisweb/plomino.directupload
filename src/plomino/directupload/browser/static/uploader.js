@@ -206,11 +206,8 @@
         $(this).prepOverlay(
                     {
                         subtype: 'ajax',
-                        closeselector: 'pippo',
                         filter: common_content_filter,
                         config: {                        
-                            closeselector: 'pippo',
-
                             onLoad: function(arg){
                                 console.log(this.getOverlay())
                                 my_config_upload_form(options,this.getOverlay());
@@ -219,10 +216,40 @@
                     }
                 );
 
-      })
+    })
 
 
-      $(".iol-wait-doc").each(function(index){
+    $(document).on("click","a.removeattachment", function(e){
+        e.preventDefault();
+        var serviceUrl = $(this).data("url");
+        if (!confirm("Eliminare il file allegato?"))
+            return;
+        $.ajax({
+            'url':serviceUrl,
+            'type':'GET',     
+            'dataType':'JSON',     
+            'success':function(data, textStatus, jqXHR){
+                console.log(data)
+                var icons = data["icons"];
+                var filename, fileicon;
+                var $el = $("#"+data["fieldname"]+"-list");
+                $el.empty();
+                $.each(data["files"],function(filename,type){
+                    fileicon = icons[type] || icons["default"]
+                    $el.append('<li><a class="removeattachment" data-url="@@removeattachment?fieldname=' + data["fieldname"] + '&filename=' + filename + '" href="#"><img src="++resource++plomino.directupload/images/trash.png" alt="Elimina allegato"></a>\
+                        <a target="new" href="getfile?filename=' + filename + '">\
+                        <img src="'+ fileicon +'"><span>' + filename + '</span></a></li>');
+
+                })
+
+            } 
+        })
+
+    });
+
+
+
+    $(".iol-wait-doc").each(function(index){
 
             var fieldName = $(this).attr("name");
 

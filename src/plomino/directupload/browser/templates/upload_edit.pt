@@ -8,6 +8,7 @@
     attachments options/fieldvalue;
     filenames attachments/keys|nothing;
     labelClass python:'document-upload required' if options['field'].getMandatory() else 'document-upload';
+    docUrl python:options['doc'].absolute_url();
     imageClass python:'iol-upload-doc multi-upload' if widget=='MULTI' else 'iol-upload-doc';
     ">
 
@@ -37,10 +38,10 @@
         <li>Documento da scaricare e ricaricare firmato:</li>
         <li><a class="directupload" title="Carica documenti da allegare." tal:attributes="href string:@@directupload/$fieldName;data-extensions extensions;data-maxsize maxsize" style="cursor: pointer;"><div tal:attributes="class imageClass">twretertwre</div></a></li>
     </ul>
-
+    <!--href string:deleteAttachmentIol?field=${options/fieldname}&filename=$attachment-->
     <ul tal:attributes="id string:${options/fieldname}-list;name options/fieldname" class="file-attachments">
     <li tal:repeat="attachment options/fieldvalue">
-        <a href="#" tal:attributes="href string:${options/fieldname}/removeattachment?filename=$attachment"><img alt="Elimina allegato" src="++resource++plomino.directupload/images/trash.png" /></a>
+        <a  href=""  class="removeattachment" tal:attributes="data-url string:@@removeattachment?fieldname=${options/fieldname}&filename=$attachment"><img alt="Elimina allegato" src="++resource++plomino.directupload/images/trash.png" /></a>
         <a href="#" target="new" tal:attributes="href python:'getfile?filename='+attachment"> <img tal:attributes="src python:options['field'].getSettings().getIcon(attachments[attachment],'small')"/><span tal:content="attachment"></span></a><img src="confirm_icon.png">
      </li>
     </ul>
