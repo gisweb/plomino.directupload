@@ -1,255 +1,127 @@
 (function ($) {
     "use strict";
 
-
     $(function () {
 
-        var my_config_upload_form  = function (options, overlay) {
+        $('.directupload, .iol-multi-upload-doc').prepOverlay(
+            {
+                subtype: 'ajax',
+                filter: common_content_filter,
+                config: {  
+               
+                    onLoad: function(arg){
+                        var me = this;
+                        config_upload_form();
 
-            //we have to check if the fileupload element existing
-
-            console.log(overlay)
-
-            if ($('#fileupload')[0] !== undefined) {
-                console.log(jupload.config['extensions'])
-                var files_re = new RegExp('(\\.|\/)('+jupload.config['extensions']+')$', 'i');
-                if(options["extensions"])
-                  files_re = new RegExp('(\\.|\/)('+options['extensions']+')$', 'i');
-                var maxFileSize = jupload.config['max_file_size'];
-                if(options["maxfilesize"])
-                  maxFileSize = options["maxfilesize"];
-                // Initialize the jQuery File Upload widget:
-                $('#fileupload').fileupload({'sequentialUploads':true, 'singleFileUploads':true});
-
-                // Enable iframe cross-domain access via redirect option:
-                $('#fileupload').fileupload(
-                    'option',
-                    'redirect',
-                    window.location.href.replace(
-                        /\/[^\/]*$/,
-                        '/cors/result.html?%s'
-                    )
-                );
-
-                $('#fileupload').fileupload('option', {
-                    url: '',
-                    maxFileSize: maxFileSize,
-                    acceptFileTypes: files_re,
-                    process: [
-                        {
-                            action: 'load',
-                            fileTypes: files_re,
-                            maxFileSize: maxFileSize
-                        },
-                        {
-                            action: 'resize',
-                            maxWidth: jupload.config['resize_max_width'],
-                            maxHeight: jupload.config['resize_max_height']
-                        },
-                        {
-                            action: 'save'
+                        /*SOVRASCRIVO LA CONFIGURAZIONE GLOBALE CON QUELLA LOCALE*/
+                        if($('#fileupload').data('fileType')){
+                            var fileType = $('#fileupload').data('fileType').replace(' ', '').replace(',', '|')
+                            $('#fileupload').fileupload('option', {
+                                acceptFileTypes: new RegExp('(\\.|\/)('+$('#fileupload').data('fileType')+')$', 'i')
+                            });
                         }
-                    ],
-                    start_i18n: jupload.messages['START_MSG'],
-                    cancel_i18n: jupload.messages['CANCEL_MSG'],
-                    delete_i18n: jupload.messages['DELETE_MSG'],
-                    description_i18n: jupload.messages['DESCRIPTION_MSG'],
-                    error_i18n: jupload.messages['ERROR_MSG']
-                });
-                console.log ($('#fileupload').fileupload());
-                // Upload server status check for browsers with CORS support:
-                if ($.support.cors) {
-                    $.ajax({
-                        url: './',
-                        type: 'HEAD'
-                    }).fail(function () {
-                        $('<span class="alert alert-error"/>')
-                            .text('Upload server currently unavailable - ' +
-                                    new Date())
-                            .appendTo('#fileupload');
-                    });
+                        if($('#fileupload').data('maxSize')){
+                            $('#fileupload').fileupload('option', {
+                                maxFileSize: $('#fileupload').data('maxSize')
+                            });
+                        }
+
+                        /*EVENTI SU UPLOAD*/
+                        $('#fileupload')
+                          .bind('fileuploadsubmit', function (e, data) {
+                              var inputs;
+                              if(data.context){
+                                  inputs = data.context.find(':input');
+                              }else{
+                                  inputs = data.form.find(':input');
+                              }
+                              if (inputs.filter('[required][value=""]').first().focus().length) {
+                                  return false;
+                              }
+                              data.formData = inputs.serializeArray();
+                            })
+                          .bind('fileuploadalways', function (e, data) {
+                            //console.log("DDDDDDDDDDDDd")
+                            //boh...
+                          })
+                          .bind('fileuploaddone', function (e, data) {
+                            //console.log(data.context.first(".preview"))
+                            //console.log(data.files)
+                            //console.log("FATTO")
+                            //console.log(self)
+                            //me.getClosers().click()
+                            if(data.files.length){
+                              var ftype = data.files[0].type
+                              if (ftype=="application/pdf"){
+                                //SOSTITUIRE CON IMMAGINE PDF
+                                //console.log(data.context)
+                              }
+
+                            }
+
+                            //console.log(data.result.files)
+                            //elenco legato al campo
+                            var info = data.result.files[0]
+                            //console.log(info)
+                            var $el = $("#"+info["field_name"]+"-list");
+                            //console.log($el)
+
+                            $el.append('<li><a href="deleteAttachmentIol?field=' + info["field_name"] + '&amp;filename=' + info["name"] + '">\
+                                <img src="++resource++plomino.directupload/images/trash.png" alt="Elimina allegato"></a>\
+                                <a target="new" href="getfile?filename=' + info["name"] + '">\
+                                <img src="topic_icon.png"><span>' + info["name"] + '</span></a></li>')
+                            
+        /*                    $el.append(
+                                $('<li>').append(
+                                    $('<a>').attr('href',info["url"]).append(
+                                        $('<span>').attr('class', 'tab').append(info["name"])
+                            ))); */  
+
+
+
+                 
+
+                          });
+
+
+
+                    }
                 }
-
-                // main settings:
-                // var files_re = new RegExp('(\\.|\/)('+jupload.config['extensions']+')$', 'i');
-                // $('#fileupload').fileupload('option', {
-                //     maxFileSize: jupload.config['max_file_size'],
-                //     acceptFileTypes: files_re,
-                //     resizeMaxWidth: jupload.config['resize_max_width'],
-                //     resizeMaxHeight: jupload.config['resize_max_height']
-                // });
-                // // Upload server status check for browsers with CORS support:
-                // if ($.support.cors) {
-                //     $.ajax({
-                //         url:'',
-                //         type: 'HEAD'
-                //     }).fail(function () {
-                //         $('<span class="alert alert-error"/>')
-                //             .text('Upload server currently unavailable - ' +
-                //                     new Date())
-                //             .appendTo('#fileupload');
-                //     });
-                // }
-
-                // //in the latest version we have a method formData who actually is
-                // // doing this...=)
-                $('#fileupload')
-                  .bind('fileuploadsubmit', function (e, data) {
-                      var inputs;
-                      if(data.context){
-                          inputs = data.context.find(':input');
-                      }else{
-                          inputs = data.form.find(':input');
-                      }
-                      if (inputs.filter('[required][value=""]').first().focus().length) {
-                          return false;
-                      }
-                      data.formData = inputs.serializeArray();
-                    })
-                  .bind('fileuploadalways', function (e, data) {
-                    console.log("DDDDDDDDDDDDd")
-                    //boh...
-                  })
-                  .bind('fileuploaddone', function (e, data) {
-                    console.log(data.context.first(".preview"))
-                    console.log(data.files)
-                    console.log("FATTO")
-                    //$(".overlay div.close").click()
-                    if(data.files.length){
-                      var ftype = data.files[0].type
-                      if (ftype=="application/pdf"){
-                        //SOSTITUIRE CON IMMAGINE PDF
-                        console.log(data.context)
-                      }
-
-                    }
-
-                    console.log(data.result.files)
-                    //elenco legato al campo
-                    var info = data.result.files[0]
-                    console.log(info)
-                    var $el = $("#"+info["field_name"]+"-list");
-                    console.log($el)
-
-                    $el.append('<li><a href="deleteAttachmentIol?field=' + info["field_name"] + '&amp;filename=' + info["name"] + '">\
-                        <img src="++resource++plomino.directupload/images/trash.png" alt="Elimina allegato"></a>\
-                        <a target="new" href="getfile?filename=' + info["name"] + '">\
-                        <img src="topic_icon.png"><span>' + info["name"] + '</span></a></li>')
-                    
-/*                    $el.append(
-                        $('<li>').append(
-                            $('<a>').attr('href',info["url"]).append(
-                                $('<span>').attr('class', 'tab').append(info["name"])
-                    ))); */  
-
-
-
-         
-
-                  });
-
-                $(document).bind('drop', function (e) {
-                    var url = $(e.originalEvent.dataTransfer.getData('text/html')).filter('img').attr('src');
-                    if (url) {
-                        $.getImageData({
-                            url: url,
-                            server:'http://localhost:8080/Plone/@@jsonimageserializer?callback=?',
-                            success: function (img) {
-                                var canvas = document.createElement('canvas');
-                                canvas.width = img.width;
-                                canvas.height = img.height;
-                                if (canvas.getContext && canvas.toBlob) {
-                                    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-                                    canvas.toBlob(function (blob) {
-                                        $('#fileupload').fileupload('add', {files: [blob]});
-                                    }, "image/jpeg");
-                                }
-                            },
-                            error: function(xhr, text_status){
-                                // Handle your error here
-                            }
-                        });
-                    }
-                    e.preventDefault();
-                });
-
             }
-
-        };
-
-
-//        TODO
-//        da fare per ogni campo che ha plugin directupload
+        );
 
 
-        //overlay collective.upload
+        $(document).on("click","a.removeattachment", function(e){
+            e.preventDefault();
+            var serviceUrl = $(this).data("url");
+            if (!confirm("Eliminare il file allegato?"))
+                return;
+            $.ajax({
+                'url':serviceUrl,
+                'type':'GET',     
+                'dataType':'JSON',     
+                'success':function(data, textStatus, jqXHR){
+                    console.log(data)
+                    var icons = data["icons"];
+                    var filename, fileicon;
+                    var $el = $("#"+data["fieldname"]+"-list");
+                    $el.empty();
+                    $.each(data["files"],function(filename,type){
+                        fileicon = icons[type] || icons["default"]
+                        $el.append('<li><a class="removeattachment" data-url="@@removeattachment?fieldname=' + data["fieldname"] + '&filename=' + filename + '" href="#"><img src="++resource++plomino.directupload/images/trash.png" alt="Elimina allegato"></a>\
+                            <a target="new" href="getfile?filename=' + filename + '">\
+                            <img src="'+ fileicon +'"><span>' + filename + '</span></a></li>');
 
-    $('.directupload, .iol-multi-upload-doc').bind("click",function(e){
+                    })
 
-        e.preventDefault();
+                } 
+            })
 
-        var fieldName = $(this).attr("name")
-
-        var options = $(this).parent().data()
-
-
-        if ($(this).hasClass("iol-upload-doc") && $("#"+fieldName+"-list").find("li").length >0){
-            //possiamo anche mettere il nome del file nell'avviso!!
-            if (!confirm("Attenzione, il campo prevede un solo allegato. Se si allega un nuovo file, il file attuale verrÃ  rimosso e sostituito"))
-                return
-
-
-        }
-
-        console.log($(this))
-
-        $(this).prepOverlay(
-                    {
-                        subtype: 'ajax',
-                        filter: common_content_filter,
-                        config: {                        
-                            onLoad: function(arg){
-                                console.log(this.getOverlay())
-                                my_config_upload_form(options,this.getOverlay());
-                            }
-                        }
-                    }
-                );
-
-    })
+        });
 
 
-    $(document).on("click","a.removeattachment", function(e){
-        e.preventDefault();
-        var serviceUrl = $(this).data("url");
-        if (!confirm("Eliminare il file allegato?"))
-            return;
-        $.ajax({
-            'url':serviceUrl,
-            'type':'GET',     
-            'dataType':'JSON',     
-            'success':function(data, textStatus, jqXHR){
-                console.log(data)
-                var icons = data["icons"];
-                var filename, fileicon;
-                var $el = $("#"+data["fieldname"]+"-list");
-                $el.empty();
-                $.each(data["files"],function(filename,type){
-                    fileicon = icons[type] || icons["default"]
-                    $el.append('<li><a class="removeattachment" data-url="@@removeattachment?fieldname=' + data["fieldname"] + '&filename=' + filename + '" href="#"><img src="++resource++plomino.directupload/images/trash.png" alt="Elimina allegato"></a>\
-                        <a target="new" href="getfile?filename=' + filename + '">\
-                        <img src="'+ fileicon +'"><span>' + filename + '</span></a></li>');
-
-                })
-
-            } 
-        })
-
-    });
-
-
-
-    $(".iol-wait-doc").each(function(index){
+        /*#######TENTATIVO DI GENERAZIONE DEI DOCUMENTI IN AJAX DA RIVEDERE ##################*/
+        $(".iol-wait-doc").each(function(index){
 
             var fieldName = $(this).attr("name");
 
@@ -287,54 +159,8 @@
                 } 
             })
 
-
-
-      });
-  
-
-
-
-
-    /*  UPLOAD SOLITO       
-
-
-        $("input[type='file'].document-upload").bind("change",function(e){
-
-
-            console.log($(this).data())
-
-            var $element = $(this);
-            var ul = $element.prev();
-            $element.prev().find("li").each(function(index,element){
-                if(index>0) $(element).remove();
-            })
-            
-            if(checkUploadFile($element)){
-                $element.prev().find(".noFile").hide()
-                var file_list = $element.prop("files");
-                var $ul = $("<ul>");
-                $ul.addClass("document-upload")
-                $element.after($ul);
-                for(var i=0;i<file_list.length;i++){
-                    var li = $('<li>' + file_list[i].name + '</li>');
-                    $ul.append(li);
-                }
-                //$elementRemove.show();
-            }
-            else{
-                $element.prev().find(".noFile").show()
-                $element.text('');
-                $element.val('');
-                //$elementRemove.hide();
-            }
-
-        })
-
-
-        */
-
-
-
+          });
+      
     });
 
 

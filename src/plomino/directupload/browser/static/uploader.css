@@ -71,7 +71,7 @@ div.no-attachments{
 }
 
 ul.file-attachments{
-  border:1px solid #ACACAC;
+  border:0px solid #ACACAC;
   border-radius: 5px;
   overflow:hidden;
   width:100%;

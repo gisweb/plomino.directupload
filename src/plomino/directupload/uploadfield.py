@@ -42,17 +42,17 @@ class IUploadField(IBaseField):
 
     maxsize = TextLine(
             title=u'Max size',
-            description=u'File max size allowed (Mb)',
+            description=u'Dimensione massima dei files in byte',
             required=False)
 
     filetype = TextLine(
             title=u'File type',
-            description=u'File type allowed (separate comma list)',
+            description=u'Estensioni permesse (separate da virgola)',
             required=False)
 
     printservice = TextLine(
             title=u'Print Service',
-            description=u'Create document service ',
+            description=u'Url',
             required=False)
 
 
